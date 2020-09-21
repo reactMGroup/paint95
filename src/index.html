@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paint 95</title>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
+
 <body>
-    
 </body>
+<script src="./app/canvas.js"></script>
+<script src="./app/toolbox.js"></script>
+<script>
+    let state = {
+        canvas : createCanvas(),
+        fillColor : "yellow",
+        start: { x: 0, y: 0 },
+        end: { x: 50, y: 70 },
+        thickness: 7
+    };
+    document.body.appendChild(createToolbox());
+    document.body.appendChild(state.canvas);
+
+    drawLine(state);
+</script>
+
 </html>

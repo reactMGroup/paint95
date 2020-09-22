@@ -34,8 +34,29 @@
     document.body.appendChild(createToolbox());
     document.body.appendChild(state.canvas);
 
-    state.canvas.onmousedown = lineOnMouseButtonDown;
-    state.canvas.onmouseup = lineOnMouseButtonUp;
+    function lineButtonClicked(event) {
+        state.canvas.onmousedown = lineOnMouseButtonDown;
+        state.canvas.onmouseup = lineOnMouseButtonUp;
+    }
+
+    function eraseButtonClicked(event) {
+        state.canvas.onmousedown = eraserOnMouseButtonDown;
+        state.canvas.onmouseup = eraserOnMouseButtonUp;
+    }
+
+    function eraserOnMouseButtonDown(event) {
+        state.canvas.onmousemove = eraseOnMouseMove;
+    }
+
+    function eraseOnMouseMove(event) {
+        state.start = getMousePosition(state.canvas, event);
+        eraseRect(state);
+    }
+
+    function eraserOnMouseButtonUp(event) {
+        state.canvas.onmousemove = null;
+    }
+
 
     function lineOnMouseButtonDown(event) {
         state.start = getMousePosition(state.canvas, event);

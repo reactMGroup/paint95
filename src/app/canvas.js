@@ -15,13 +15,22 @@ function getMousePosition(canvas, evt) {
 const canvasDefaultWidth = 300;
 const canvasDefaultHeight = 150;
 
+function eraseRect(state) {
+    let ctx = state.canvas.getContext("2d");
+    let x = adjustedX(state, state.start.x) - state.thickness / 2;
+    let y = adjustedY(state, state.start.y) - state.thickness / 2;
+    let width = state.thickness;
+    let height = state.thickness;
+    ctx.clearRect(x, y, width, height);
+}
+
 function drawLine(state) {
     let ctx = state.canvas.getContext("2d");
     ctx.strokeStyle = state.fillColor;
     ctx.lineWidth = state.thickness;
     ctx.beginPath();
     ctx.moveTo(adjustedX(state, state.start.x), adjustedY(state, state.start.y));
-    ctx.lineTo(adjustedX(state,state.end.x), adjustedY(state, state.end.y));
+    ctx.lineTo(adjustedX(state, state.end.x), adjustedY(state, state.end.y));
     ctx.stroke();
 }
 

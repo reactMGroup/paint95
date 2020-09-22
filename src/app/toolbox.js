@@ -2,8 +2,28 @@ function createToolbox() {
     let toolbox = document.createElement('header');
     toolbox.id = "toolBox";
     toolbox.className = "container-fluid";
-    toolbox.appendChild(createColorsGroup());
+    let toolbarOne = createDiv();
+    toolbarOne.className = "btn-toolbar";
+    toolbox.appendChild(toolbarOne);
+    toolbarOne.appendChild(createColorsGroup());
+    toolbarOne.appendChild(createThicknessGroup());
     return toolbox;
+}
+
+function createThicknessGroup() {
+    let result = createInputGroup("Thickness:");
+    let btnGroup = createButtonsGroup();
+    palette.lines = {};
+    paletteDefinition.lines.forEach((thickness, index) => {
+        let btn = createButton();
+        btn.id = 'thickness' + index;
+        palette.lines[btn.id] = thickness;
+        btn.innerHTML = thickness;
+        btn.onclick = setLinesThickness;
+        btnGroup.appendChild(btn);
+    });
+    result.appendChild(btnGroup);
+    return result;
 }
 
 function createColorsGroup() {
@@ -63,7 +83,7 @@ let paletteDefinition = {
 }
 
 let palette = {
-    colors: { color1: "aqua" },
+    colors: {},
     lines: { line1: 1 }
 }
 

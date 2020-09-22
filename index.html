@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paint 95</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="./src/css/style.css">
 </head>
 
@@ -21,6 +23,7 @@
         thickness: 7
     };
 
+
     const MOUSE_UP = 'up';
     const MOUSE_DOWN = 'down';
 
@@ -35,16 +38,11 @@
     state.canvas.onmouseup = lineOnMouseButtonUp;
 
     function lineOnMouseButtonDown(event) {
-        let mousePosition = getMousePosition(state.canvas, event);
-        state.start.x = mousePosition.x;
-        state.start.y = mousePosition.y;
-        uiState.mouseButton = MOUSE_DOWN;
+        state.start = getMousePosition(state.canvas, event);
     }
 
     function lineOnMouseButtonUp(event) {
-        let mousePosition = getMousePosition(state.canvas, event);
-        state.end.x = mousePosition.x;
-        state.end.y = mousePosition.y;
+        state.end = getMousePosition(state.canvas, event);
         drawLine(state);
     }
 </script>

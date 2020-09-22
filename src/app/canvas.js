@@ -19,6 +19,7 @@ function drawLine(state) {
     let ctx = state.canvas.getContext("2d");
     ctx.strokeStyle = state.fillColor;
     ctx.lineWidth = state.thickness;
+    ctx.beginPath();
     ctx.moveTo(adjustedX(state, state.start.x), adjustedY(state, state.start.y));
     ctx.lineTo(adjustedX(state,state.end.x), adjustedY(state, state.end.y));
     ctx.stroke();

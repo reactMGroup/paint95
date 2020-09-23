@@ -1,15 +1,35 @@
 function createToolbox() {
     let toolbox = document.createElement('header');
     toolbox.id = "toolBox";
-    toolbox.className = "container-fluid";
+    // toolbox.className = "container-fluid";
     let toolbarTools = createToolbar();
     toolbarTools.appendChild(createToolsGroup());
-    toolbox.appendChild(toolbarTools);
     let toolbarOne = createToolbar();
-    toolbox.appendChild(toolbarOne);
     toolbarOne.appendChild(createColorsGroup());
     toolbarOne.appendChild(createThicknessGroup());
+
+    toolbox.appendChild(toolbarTools);
+    toolbox.appendChild(toolbarOne);
     return toolbox;
+}
+
+function createColorModal() {
+    return loadHTMLPage('/src/pages/colormodal.html');
+}
+
+function createMenu() {
+    return loadHTMLPage('/src/pages/menu.html');
+}
+
+function loadHTMLPage(pagePath) {
+    return new Promise((resolve, reject) => {
+        fetch(pagePath).
+            then(response => {
+                response.text().then(textHTML => {
+                    resolve(htmlToElems(textHTML));
+                });
+            });
+    });
 }
 
 function createToolsGroup() {
@@ -52,9 +72,16 @@ function createThicknessGroup() {
     return result;
 }
 
-function createColorsGroup() {
-    let result = createInputGroup("Color:");
+function refreshColorsBar() {
+    let colorButtonsContainer = document.getElementById('colorButtonsContainer');
+    colorButtonsContainer.
+        removeChild(document.getElementById('colorButtonsGroup'));
+    colorButtonsContainer.appendChild(createColorButtonsGroup());
+}
+
+function createColorButtonsGroup() {
     let btnGroup = createButtonsGroup();
+    btnGroup.id = 'colorButtonsGroup';
     palette.colors = {};
     paletteDefinition.colors.forEach((color, index) => {
         let btn = createButton();
@@ -64,7 +91,13 @@ function createColorsGroup() {
         btn.onclick = setDrawingColor;
         btnGroup.appendChild(btn);
     });
-    result.appendChild(btnGroup);
+    return btnGroup;
+}
+
+function createColorsGroup() {
+    let result = createInputGroup("Color:");
+    result.id = 'colorButtonsContainer';
+    result.appendChild(createColorButtonsGroup());
     return result;
 }
 
@@ -103,6 +136,14 @@ function createDiv() {
     return document.createElement('div');
 }
 
+let pickedColor = '';
+function addPickedColor() {
+    paletteDefinition.colors.push(pickedColor);
+    refreshColorsBar();
+}
+
+
+
 let paletteDefinition = {
     colors: ['aqua', 'green', 'black', 'lightgrey', 'pink', '#FF4567'],
     lines: [2, 4, 6]
@@ -121,3 +162,8 @@ function setLinesThickness(event) {
     state.thickness = palette.lines[event.target.id];
 }
 
+function htmlToElems(html) {
+    let temp = document.createElement('template');
+    temp.innerHTML = html;
+    return temp.content.childNodes[0];
+}

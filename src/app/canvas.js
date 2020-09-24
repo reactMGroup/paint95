@@ -41,6 +41,11 @@ function eraseRect(rect, pen) {
     ctx.clearRect(x, y, width, height);
 }
 
+function clearAll() {
+    state = [];
+    redraw(state, pen);
+}
+
 function clearCanvas() {
     let ctx = pen.canvas.getContext("2d");
     let x = 0;
@@ -51,8 +56,11 @@ function clearCanvas() {
 }
 
 function drawCircle(state, pen) {
+    let ctx = pen.canvas.getContext("2d");
+    ctx.lineWidth = state.thickness;
+    ctx.strokeStyle = state.fillColor;
     ctx.beginPath();
-    ctx.arc(75, 75, 50, 0, Math.PI * 2, true); // Outer circle
+    ctx.arc(state.start.x, state.start.y, state.radius, 0, Math.PI * 2, true);
     ctx.stroke();
 }
 function drawLine(state, pen) {

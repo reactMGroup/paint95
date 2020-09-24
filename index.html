@@ -60,14 +60,12 @@
         document.body.appendChild(menuElement)
         document.body.appendChild(createToolbox());
         document.body.appendChild(pen.canvas);
-
-        document.getElementById("navLoadPalette").onclick = loadPaletteClicked;
     });
 
-
-    function loadPaletteClicked(event) {
+    function circleButtonClicked(event) {
+        pen.canvas.onmousedown = circleOnMouseButtonDown;
+        pen.canvas.onmouseup = onMouseButtonUp;
     }
-
 
     function lineButtonClicked(event) {
         pen.canvas.onmousedown = lineOnMouseButtonDown;
@@ -94,6 +92,35 @@
     }
 
     function eraserOnMouseButtonUp(event) {
+        pen.canvas.onmousemove = null;
+    }
+
+
+    function circleOnMouseButtonDown(event) {
+        let start = getMousePosition(pen.canvas, event);
+        let x = adjustedX(pen, start.x);
+        let y = adjustedY(pen, start.y);
+        let newLine = {
+            type: TYPE_CIRCLE,
+            start: { x: x, y: y },
+            radius: {},
+            fillColor: pen.fillColor,
+            thickness: pen.thickness
+        }
+        state.push(newLine);
+        pen.canvas.onmousemove = circleOnMouseMove;
+    }
+
+    function circleOnMouseMove(event) {
+        let lastCircle = state[state.length - 1]
+        let current = getMousePosition(pen.canvas, event);
+        let x = adjustedX(pen, current.x);
+        let y = adjustedY(pen, current.y);
+        lastCircle.radius = Math.sqrt((x - lastCircle.start.x) ** 2 + (y - lastCircle.start.y) ** 2);
+        redraw(state, pen);
+    }
+
+    function onMouseButtonUp(event) {
         pen.canvas.onmousemove = null;
     }
 

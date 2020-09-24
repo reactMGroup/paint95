@@ -11,7 +11,10 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a id="navLoadPalette" class="dropdown-item" href="#" data-toggle="modal" data-target="#colorPickModal">Add colors ...</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Reload</a>
+            <a onclick="saveToFile()" class="dropdown-item" href="#">Save...</a>
+            <a onclick="loadFromFile()" class="dropdown-item" href="#">Open...</a>
+            <div class="dropdown-divider"></div>
+            <a onclick="clearAll()" class="dropdown-item" href="#">Clear</a>
           </div>
         </li>
         <!-- <li class="nav-item">

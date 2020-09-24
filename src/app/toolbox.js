@@ -36,6 +36,7 @@ function createToolsGroup() {
     let result = createInputGroup("Tools:");
     let btnGroup = createButtonsGroup();
     btnGroup.appendChild(createFullButton('line', lineButtonClicked, "Line"));
+    btnGroup.appendChild(createFullButton('circle', circleButtonClicked, "Circle"));
     btnGroup.appendChild(createFullButton('eraser', eraseButtonClicked, "Eraser"));
     result.appendChild(btnGroup);
     return result;

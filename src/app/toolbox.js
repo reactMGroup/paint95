@@ -155,11 +155,11 @@ let palette = {
 }
 
 function setDrawingColor(event) {
-    state.fillColor = palette.colors[event.target.id];
+    pen.fillColor = palette.colors[event.target.id];
 }
 
 function setLinesThickness(event) {
-    state.thickness = palette.lines[event.target.id];
+    pen.thickness = palette.lines[event.target.id];
 }
 
 function htmlToElems(html) {

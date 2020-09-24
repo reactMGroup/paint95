@@ -15,33 +15,64 @@ function getMousePosition(canvas, evt) {
 const canvasDefaultWidth = 300;
 const canvasDefaultHeight = 150;
 
-function eraseRect(state) {
-    let ctx = state.canvas.getContext("2d");
-    let x = adjustedX(state, state.start.x) - state.thickness / 2;
-    let y = adjustedY(state, state.start.y) - state.thickness / 2;
-    let width = state.thickness;
-    let height = state.thickness;
+const TYPE_ERASE = 'erase';
+const TYPE_LINE = 'line';
+const TYPE_CIRCLE = 'circle';
+
+const drawingMethods = {};
+
+drawingMethods[TYPE_ERASE] = eraseRect;
+drawingMethods[TYPE_LINE] = drawLine;
+drawingMethods[TYPE_CIRCLE] = drawCircle;
+
+function redraw(currentState, drawingPen) {
+    clearCanvas();
+    currentState.forEach(shape => {
+        drawingMethods[shape.type](shape, drawingPen);
+    });
+}
+
+function eraseRect(rect, pen) {
+    let ctx = pen.canvas.getContext("2d");
+    let x = adjustedX(pen, rect.start.x) - pen.thickness / 2;
+    let y = adjustedY(pen, rect.start.y) - pen.thickness / 2;
+    let width = pen.thickness;
+    let height = pen.thickness;
     ctx.clearRect(x, y, width, height);
 }
 
-function drawLine(state) {
-    let ctx = state.canvas.getContext("2d");
+function clearCanvas() {
+    let ctx = pen.canvas.getContext("2d");
+    let x = 0;
+    let y = 0;
+    let width = getCanvasRectangle(pen).width;
+    let height = getCanvasRectangle(pen).height;
+    ctx.clearRect(x, y, width, height);
+}
+
+function drawCircle(state, pen) {
+    ctx.beginPath();
+    ctx.arc(75, 75, 50, 0, Math.PI * 2, true); // Outer circle
+    ctx.stroke();
+}
+function drawLine(state, pen) {
+    let ctx = pen.canvas.getContext("2d");
     ctx.strokeStyle = state.fillColor;
     ctx.lineWidth = state.thickness;
     ctx.beginPath();
-    ctx.moveTo(adjustedX(state, state.start.x), adjustedY(state, state.start.y));
-    ctx.lineTo(adjustedX(state, state.end.x), adjustedY(state, state.end.y));
+    ctx.moveTo(adjustedX(pen, state.start.x), adjustedY(pen, state.start.y));
+    ctx.lineTo(adjustedX(pen, state.end.x), adjustedY(pen, state.end.y));
     ctx.stroke();
 }
 
-function adjustedX(state, x) {
-    return x * canvasDefaultWidth / getCanvasRectangle(state).width;
+function adjustedX(pen, x) {
+    return Math.round(x * canvasDefaultWidth / getCanvasRectangle(pen).width);
 }
 
-function adjustedY(state, y) {
-    return y * canvasDefaultHeight / getCanvasRectangle(state).height;;
+function adjustedY(pen, y) {
+    return Math.round(y * canvasDefaultHeight / getCanvasRectangle(pen).height);
 }
 
-function getCanvasRectangle(state) {
-    return state.canvas.getBoundingClientRect();
+function getCanvasRectangle(pen) {
+    return pen.canvas.getBoundingClientRect();
 }

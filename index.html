@@ -25,14 +25,13 @@
 <script src="./src/app/toolbox.js"></script>
 <script src="./src/lib/dist/vanilla-picker.min.js"></script>
 <script>
-    let state = {
+    let pen = {
         canvas: createCanvas(),
-        fillColor: "yellow",
-        start: { x: 0, y: 0 },
-        end: { x: 150, y: 70 },
-        thickness: 7
+        fillColor: "green",
+        thickness: 3
     };
 
+    let state = []
 
     const MOUSE_UP = 'up';
     const MOUSE_DOWN = 'down';
@@ -47,17 +46,20 @@
         new Picker({
             parent: document.querySelector('#colorPickParent'),
             popup: false, // 'right'(default), 'left', 'top', 'bottom',
-            color: '#222',
+            color: pickedColor,
             onChange: function (color) {
                 pickedColor = color.hex;
             },
+            onDone: function (color) { },
+            onOpen: function (color) { },
+            onClose: function (color) { }
         });
     });
 
     createMenu().then((menuElement) => {
         document.body.appendChild(menuElement)
         document.body.appendChild(createToolbox());
-        document.body.appendChild(state.canvas);
+        document.body.appendChild(pen.canvas);
 
         document.getElementById("navLoadPalette").onclick = loadPaletteClicked;
     });
@@ -68,36 +70,54 @@
 
 
     function lineButtonClicked(event) {
-        state.canvas.onmousedown = lineOnMouseButtonDown;
-        state.canvas.onmouseup = lineOnMouseButtonUp;
+        pen.canvas.onmousedown = lineOnMouseButtonDown;
+        pen.canvas.onmouseup = lineOnMouseButtonUp;
     }
 
     function eraseButtonClicked(event) {
-        state.canvas.onmousedown = eraserOnMouseButtonDown;
-        state.canvas.onmouseup = eraserOnMouseButtonUp;
+        pen.canvas.onmousedown = eraserOnMouseButtonDown;
+        pen.canvas.onmouseup = eraserOnMouseButtonUp;
     }
 
     function eraserOnMouseButtonDown(event) {
-        state.canvas.onmousemove = eraseOnMouseMove;
+        pen.canvas.onmousemove = eraseOnMouseMove;
     }
 
     function eraseOnMouseMove(event) {
-        state.start = getMousePosition(state.canvas, event);
-        eraseRect(state);
+        let newArea = {
+            type: 'erase',
+            start: getMousePosition(pen.canvas, event),
+            thickness: pen.thickness
+        }
+        state.push(newArea);
+        redraw(state, pen);
     }
 
     function eraserOnMouseButtonUp(event) {
-        state.canvas.onmousemove = null;
+        pen.canvas.onmousemove = null;
     }
 
 
     function lineOnMouseButtonDown(event) {
-        state.start = getMousePosition(state.canvas, event);
+        let newLine = {
+            type: 'line',
+            start: getMousePosition(pen.canvas, event),
+            end: {},
+            fillColor: pen.fillColor,
+            thickness: pen.thickness
+        }
+        state.push(newLine);
+        pen.canvas.onmousemove = lineOnMouseMove;
+    }
+
+    function lineOnMouseMove(event) {
+        let lastLine = state[state.length - 1]
+        lastLine.end = getMousePosition(pen.canvas, event);
+        redraw(state, pen);
     }
 
     function lineOnMouseButtonUp(event) {
-        state.end = getMousePosition(state.canvas, event);
-        drawLine(state);
+        pen.canvas.onmousemove = null;
     }
 </script>
 

@@ -23,6 +23,7 @@
     crossorigin="anonymous"></script>
 <script src="./src/app/canvas.js"></script>
 <script src="./src/app/toolbox.js"></script>
+<script src="./src/app/persistence.js"></script>
 <script src="./src/lib/dist/vanilla-picker.min.js"></script>
 <script>
     let pen = {
@@ -39,6 +40,25 @@
     let uiState = {
         mouseButton: MOUSE_UP
     };
+
+    createSaveInFileModal().then((saveInFileElement) => {
+        document.body.appendChild(saveInFileElement);
+        document.getElementById("btnSaveInFile").onclick = function saveToFile() {
+            new CanvasFile().save(state, document.getElementById('fileName').value);
+        };
+    });
+    createLoadFileModal().then((loadFileElement) => {
+        document.body.appendChild(loadFileElement);
+        document.getElementById('btnLoadFile').onclick = function (event) {
+            let file = document.getElementById('fileLoadInput').files[0];
+            let result = file.text()
+                .then(canvasJasonString => {
+                    console.log(canvasJasonString);
+                    state = JSON.parse(canvasJasonString);
+                    redraw(state, pen);
+                });
+        };
+    });
 
     createColorModal().then((colorModalElement) => {
         document.body.appendChild(colorModalElement);
@@ -146,6 +166,7 @@
     function lineOnMouseButtonUp(event) {
         pen.canvas.onmousemove = null;
     }
+
 </script>
 
 </html>

@@ -13,6 +13,14 @@ function createToolbox() {
     return toolbox;
 }
 
+function createSaveInFileModal(){
+    return loadHTMLPage('/src/pages/saveInFileModal.html');
+}
+
+function createLoadFileModal(){
+    return loadHTMLPage('/src/pages/loadFileModal.html');
+}
+
 function createColorModal() {
     return loadHTMLPage('/src/pages/colormodal.html');
 }

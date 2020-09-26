@@ -5,11 +5,14 @@ function createCanvas() {
 }
 
 function getMousePosition(canvas, evt) {
-    var rect = canvas.getBoundingClientRect();
+    var rect = canvas.getBoundingClientRect(), // abs. size of element
+        scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
+        scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
+
     return {
-        x: evt.clientX - rect.left,
-        y: evt.clientY - rect.top
-    };
+        x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
+        y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
+    }
 }
 
 const canvasDefaultWidth = 300;
@@ -34,8 +37,8 @@ function redraw(currentState, drawingPen) {
 
 function eraseRect(rect, pen) {
     let ctx = pen.canvas.getContext("2d");
-    let x = adjustedX(pen, rect.start.x) - pen.thickness / 2;
-    let y = adjustedY(pen, rect.start.y) - pen.thickness / 2;
+    let x = rect.start.x - pen.thickness / 2;
+    let y = rect.start.y - pen.thickness / 2;
     let width = pen.thickness;
     let height = pen.thickness;
     ctx.clearRect(x, y, width, height);
@@ -68,19 +71,18 @@ function drawLine(state, pen) {
     ctx.strokeStyle = state.fillColor;
     ctx.lineWidth = state.thickness;
     ctx.beginPath();
-    ctx.moveTo(adjustedX(pen, state.start.x), adjustedY(pen, state.start.y));
-    ctx.lineTo(adjustedX(pen, state.end.x), adjustedY(pen, state.end.y));
+    ctx.moveTo(state.start.x, state.start.y);
+    ctx.lineTo(state.end.x, state.end.y);
     ctx.stroke();
 }
 
-function adjustedX(pen, x) {
-    return Math.round(x * canvasDefaultWidth / getCanvasRectangle(pen).width);
-}
-
-function adjustedY(pen, y) {
-    return Math.round(y * canvasDefaultHeight / getCanvasRectangle(pen).height);
-}
-
 function getCanvasRectangle(pen) {
-    return pen.canvas.getBoundingClientRect();
+    return pen.canvas;
+}
+
+function setCanvasSize(size, pen) {
+    pen.canvas.width = size.width;
+    pen.canvas.height = size.height;
+    redraw(state, pen);
+
 }

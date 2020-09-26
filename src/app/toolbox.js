@@ -4,6 +4,7 @@ function createToolbox() {
     // toolbox.className = "container-fluid";
     let toolbarTools = createToolbar();
     toolbarTools.appendChild(createToolsGroup());
+    toolbarTools.appendChild(createCanvasSize());
     let toolbarOne = createToolbar();
     toolbarOne.appendChild(createColorsGroup());
     toolbarOne.appendChild(createThicknessGroup());
@@ -13,11 +14,11 @@ function createToolbox() {
     return toolbox;
 }
 
-function createSaveInFileModal(){
+function createSaveInFileModal() {
     return loadHTMLPage('/src/pages/saveInFileModal.html');
 }
 
-function createLoadFileModal(){
+function createLoadFileModal() {
     return loadHTMLPage('/src/pages/loadFileModal.html');
 }
 
@@ -49,6 +50,46 @@ function createToolsGroup() {
     result.appendChild(btnGroup);
     return result;
 }
+
+function createCanvasSize() {
+    let result = createInputGroup("Canvas size:");
+    let form = createDiv();
+    form.className = "form-inline";
+    form.appendChild(createLabel("Width", 'inputCanvasWidth'));
+    form.appendChild(createInput('number', 'inputCanvasWidth'));
+
+    form.appendChild(createLabel("Height", 'inputCanvasHeight'));
+    form.appendChild(createInput('number', 'inputCanvasHeight'));
+
+    form.appendChild(createFullButton('applySize', applyCanvasSizeClicked, "Apply"));
+    result.appendChild(form);
+    return result;
+}
+
+function applyCanvasSizeClicked() {
+    let size = {
+        width: Math.round(document.getElementById('inputCanvasWidth').value),
+        height: Math.round(document.getElementById('inputCanvasHeight').value)
+    }
+    setCanvasSize(size, pen);
+}
+
+function createInput(type, id) {
+    let result = document.createElement('input');
+    result.type = type;
+    result.id = id;
+    result.className = "form-control";
+    return result;
+}
+
+function createLabel(caption, inputId) {
+    let result = document.createElement('label');
+    result.innerHTML = caption;
+    result.for = inputId;
+    result.className = "col-form-label";
+    return result;
+}
+
 
 function createFullButton(id, onClickFunction, caption) {
     let btn = createButton();

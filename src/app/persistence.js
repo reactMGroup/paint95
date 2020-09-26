@@ -3,7 +3,7 @@ class CanvasFile {
         // this.save = saveMethod;
     }
 
-    save = function (jsonObject, fileName) {
+    save(jsonObject, fileName) {
         let textToBLOB = new Blob([JSON.stringify(jsonObject, null, 2)], { type: 'application/json' });
         const sFileName = fileName;
 

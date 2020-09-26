@@ -117,13 +117,10 @@
 
 
     function circleOnMouseButtonDown(event) {
-        let start = getMousePosition(pen.canvas, event);
-        let x = adjustedX(pen, start.x);
-        let y = adjustedY(pen, start.y);
         let newLine = {
             type: TYPE_CIRCLE,
-            start: { x: x, y: y },
-            radius: {},
+            start: getMousePosition(pen.canvas, event),
+            radius: 0,
             fillColor: pen.fillColor,
             thickness: pen.thickness
         }
@@ -134,9 +131,7 @@
     function circleOnMouseMove(event) {
         let lastCircle = state[state.length - 1]
         let current = getMousePosition(pen.canvas, event);
-        let x = adjustedX(pen, current.x);
-        let y = adjustedY(pen, current.y);
-        lastCircle.radius = Math.sqrt((x - lastCircle.start.x) ** 2 + (y - lastCircle.start.y) ** 2);
+        lastCircle.radius = Math.sqrt((current.x - lastCircle.start.x) ** 2 + (current.y - lastCircle.start.y) ** 2);
         redraw(state, pen);
     }
 
